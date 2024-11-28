@@ -11,7 +11,7 @@ function* login(action){
     // const result = yield call(logInApi, action.data); // call은 동기 함수 호출 , fork는 비동기 함수 호출
     yield put({
       type: 'LOG_IN_SUCCESS',
-      // data: result.data,
+      data: action.data,
     })
   } catch (err) {
     yield put({ // dispatch

@@ -43,14 +43,14 @@ const items = [
 ];
 
 const AppLayout = ({ children }) => {
-  const { logInComplete } = useSelector((state) => state.user);
+  const { me } = useSelector((state) => state.user);
 
   return (
     <div>
       <Menu mode="horizontal" items={items} />
       <Row gutter={8}>
         <Col xs={24} md={6}>
-          {logInComplete ? <UserProfile /> : <LoginForm />}
+          {me ? <UserProfile /> : <LoginForm />}
         </Col>
         <Col xs={24} md={12}>
           {children}

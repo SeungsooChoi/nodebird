@@ -17,15 +17,15 @@ const UserProfile = () => {
       actions={[
         <div key="dd">0
           dd
-          <br />0
+          <br />{me.Posts.length}
         </div>,
         <div key="ss">
           ss
-          <br />0
+          <br />{me.Followings.length}
         </div>,
         <div key="aa">
           aa
-          <br />0
+          <br />{me.Followers.length}
         </div>,
       ]}
     >

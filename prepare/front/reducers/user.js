@@ -1,13 +1,13 @@
 export const initialState = {
     logInLoading: false, // 로그인 시도중
     logInComplete: false,
-    logInError: false,
+    logInError: null,
     logOutLoading: false, // 로그아웃 시도중
     logOutComplete: false,
-    logOutError: false,
+    logOutError: null,
     signUpLoading: false, // 회원가입 시도중
     signUpComplete: false,
-    signUpError: false,
+    signUpError: null,
     me: null,
     signUpData: {},
     logInData: {},
@@ -99,6 +99,26 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 logOutLoading: false,
                 logOutError: action.error,
+            };
+        case SIGN_UP_REQUEST:
+            return {
+                ...state,
+                signUpLoading: true,
+                signUpError: null,
+                signUpDone: false,
+            };
+        case SIGN_UP_SUCCESS:
+            return {
+                ...state,
+                signUpLoading: false,
+                signUpComplete: true,
+                me: null,
+            };
+        case SIGN_UP_FAILURE:
+            return {
+                ...state,
+                signUpLoading: false,
+                signUpError: action.error,
             };
         default:
             return state;

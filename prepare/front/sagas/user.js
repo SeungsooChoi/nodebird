@@ -8,7 +8,6 @@ import {
   LOG_OUT_REQUEST,
   LOG_OUT_SUCCESS, SIGN_UP_FAILURE, SIGN_UP_REQUEST, SIGN_UP_SUCCESS
 } from "../reducers/user";
-import signup from "../pages/signup";
 
 function logInApi(data) {
   return axios.post('/api/login', data)

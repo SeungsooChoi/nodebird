@@ -13,12 +13,13 @@ function addPostApi(data) {
   return axios.post('/api/post', data)
 }
 
-function* addPost(){
+function* addPost(action){
   try {
     yield delay(1000);
     // const result = yield call(addPostApi, action.data); // call은 동기 함수 호출 , fork는 비동기 함수 호출
     yield put({
       type: ADD_POST_SUCCESS,
+      data: action.data,
     })
   } catch (err) {
     yield put({ // dispatch
@@ -32,12 +33,13 @@ function addCommentApi(data) {
   return axios.post(`/api/post/${data.postId}/comment`, data)
 }
 
-function* addComment(){
+function* addComment(action){
   try {
     yield delay(1000);
     // const result = yield call(addCommentApi, action.data); // call은 동기 함수 호출 , fork는 비동기 함수 호출
     yield put({
       type: ADD_COMMENT_SUCCESS,
+      data: action.data,
     })
   } catch (err) {
     yield put({ // dispatch

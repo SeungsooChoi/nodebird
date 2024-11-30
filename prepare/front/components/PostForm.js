@@ -30,7 +30,7 @@ const PostForm = () => {
         value={text}
         onChange={onChangeText}
         maxLength={140}
-        placeholer="뫗"
+        placeholder="텍스트를 입력하세요"
       />
       <div>
         <input type="file" multiple style={{display: 'none'}} ref={imageInput}/>

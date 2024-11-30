@@ -1,3 +1,5 @@
+import shortId from "shortid"
+
 export const initialState = {
     mainPosts: [{
         id:1,
@@ -47,16 +49,25 @@ export const addCommentAction = (data) => ({
 });
 
 
-const dummyPost = {
-    id:2,
+const dummyPost = (data) => ({
+    id:shortId.generate(),
     User:{
         id:1,
         nickname:'승수',
     },
-    content:'첫 번째 게시글 #해시태그 ㅇㅇ',
+    content: data,
     Images:[],
     Comments:[],
-};
+});
+
+const dummyComment = (data) => ({
+    id:shortId.generate(),
+    content: data,
+    User:{
+        id:1,
+        nickname:'승수',
+    },
+});
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
@@ -66,11 +77,11 @@ const reducer = (state = initialState, action) => {
                 addPostLoading: true,
                 addPostComplete: false,
                 addPostError: null,
-            }
+            };
         case ADD_POST_SUCCESS:
             return {
                 ...state,
-                mainPosts: [dummyPost, ...state.mainPosts], // 앞에 추가해야 게시글 위에 추가가 됨
+                mainPosts: [dummyPost(action.data), ...state.mainPosts], // 앞에 추가해야 게시글 위에 추가가 됨
                 addPostLoading: false,
                 addPostComplete: true,
             };
@@ -79,26 +90,35 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 addPostLoading: false,
                 addPostError: action.payload,
-            }
+            };
         case ADD_COMMENT_REQUEST:
             return {
                 ...state,
                 addCommentLoading: true,
                 addCommentComplete: false,
                 addCommentError: null,
-            }
-        case ADD_COMMENT_SUCCESS:
+            };
+        case ADD_COMMENT_SUCCESS:{
+            // 불변성
+            const postIndex = state.mainPosts.findIndex(post => post.id === action.data.postId);
+            const post = {...state.mainPosts[postIndex]};
+            post.Comments = [dummyComment(action.data.content), ...post.Comments];
+            const mainPosts = [...state.mainPosts];
+            mainPosts[postIndex] = post;
+
             return {
                 ...state,
+                mainPosts,
                 addCommentLoading: false,
                 addCommentComplete: true,
             };
+        }
         case ADD_COMMENT_FAILURE:
             return {
                 ...state,
                 addCommentLoading: false,
                 addCommentError: action.payload,
-            }
+            };
         default:
             return state;
     }

@@ -1,5 +1,7 @@
 import shortId from "shortid";
 import { produce } from "immer";
+import { faker } from "@faker-js/faker";
+import shortid from "shortid";
 
 export const initialState = {
     // 대문자는 서버에서 주는 값
@@ -35,6 +37,28 @@ export const initialState = {
     addCommentComplete: false,
     addCommentError: null,
 }
+
+faker.seed(123);
+initialState.mainPosts = initialState.mainPosts.concat(
+  Array(20).fill().map((v, i) => ({
+      id: shortid.generate(),
+      User:{
+        id: shortid.generate(),
+        nickname: faker.internet.username()
+      },
+      content: faker.lorem.paragraph(),
+      Images:[{
+          src: faker.image.url(),
+      }],
+      Comments:[{
+          User: {
+              id: shortid.generate(),
+              nickname: faker.internet.username()
+          },
+          content: faker.lorem.sentence(),
+      }],
+  }))
+);
 
 // action
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';

@@ -15,16 +15,16 @@ const UserProfile = () => {
   return (
     <Card
       actions={[
-        <div key="dd">0
-          dd
+        <div key="post">
+          게시글
           <br />{me.Posts.length}
         </div>,
-        <div key="ss">
-          ss
+        <div key="followings">
+          팔로잉
           <br />{me.Followings.length}
         </div>,
-        <div key="aa">
-          aa
+        <div key="followers">
+          팔로워
           <br />{me.Followers.length}
         </div>,
       ]}

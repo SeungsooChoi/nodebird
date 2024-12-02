@@ -5,28 +5,12 @@ import shortid from "shortid";
 
 export const initialState = {
     // 대문자는 서버에서 주는 값
-    mainPosts: [{
-        id:1,
-        User:{
-            id:1,
-            nickname:'승수',
-        },
-        content:'첫 번째 게시글 #해시태그 ㅇㅇ',
-        Images:[
-            { id: shortId.generate(), src:'https://bookthumb-phinf.pstatic.net/cover/137/995/13799585.jpg?udate=20180726' },
-            { id: shortId.generate(), src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSg3UA9mvWj116vXtjJlpjHK1_Oqvd6Lze-eQ&s' },
-            { id: shortId.generate(), src:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSg3UA9mvWj116vXtjJlpjHK1_Oqvd6Lze-eQ&s' },
-        ],
-        Comments:[{
-            id: shortId.generate(),
-            User:{
-                id: shortId.generate(),
-                nickname:'승수',
-            },
-            content:'내용내용',
-        }],
-    }],
+    mainPosts: [],
     imagePaths:[],
+    hasMorePosts: true,
+    loadPostLoading: false, // 글 로드 시도중
+    loadPostComplete: false,
+    loadPostError: null,
     addPostLoading: false, // 글 추가 시도중
     addPostComplete: false,
     addPostError: null,
@@ -39,28 +23,31 @@ export const initialState = {
 }
 
 faker.seed(123);
-initialState.mainPosts = initialState.mainPosts.concat(
-  Array(20).fill().map((v, i) => ({
-      id: shortid.generate(),
-      User:{
+
+export const generateDummyPosts = (number) => Array(number).fill().map((v, i) => ({
+    id: shortid.generate(),
+    User:{
         id: shortid.generate(),
         nickname: faker.internet.username()
-      },
-      content: faker.lorem.paragraph(),
-      Images:[{
-          src: faker.image.url(),
-      }],
-      Comments:[{
-          User: {
-              id: shortid.generate(),
-              nickname: faker.internet.username()
-          },
-          content: faker.lorem.sentence(),
-      }],
-  }))
-);
+    },
+    content: faker.lorem.paragraph(),
+    Images:[{
+        src: faker.image.url(),
+    }],
+    Comments:[{
+        User: {
+            id: shortid.generate(),
+            nickname: faker.internet.username()
+        },
+        content: faker.lorem.sentence(),
+    }],
+}));
 
 // action
+export const LOAD_POST_REQUEST = 'LOAD_POST_REQUEST';
+export const LOAD_POST_SUCCESS = 'LOAD_POST_SUCCESS';
+export const LOAD_POST_FAILURE = 'LOAD_POST_FAILURE';
+
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
 export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
@@ -113,6 +100,21 @@ const dummyComment = (data) => ({
 const reducer = (state = initialState, action) => {
     return produce(state, (draft) => {
         switch (action.type) {
+            case LOAD_POST_REQUEST:
+                draft.loadPostLoading = true;
+                draft.loadPostComplete = false;
+                draft.loadPostError = null;
+                break;
+            case LOAD_POST_SUCCESS:
+                draft.loadPostLoading = false;
+                draft.loadPostComplete = true;
+                draft.mainPosts = action.data.concat(draft.mainPosts);
+                draft.hasMorePosts = draft.mainPosts.length <= 50; // 50개만
+                break;
+            case LOAD_POST_FAILURE:
+                draft.loadPostLoading = false;
+                draft.loadPostError = action.payload;
+                break;
             case ADD_POST_REQUEST:
                 draft.addPostLoading = true;
                 draft.addPostComplete = false;

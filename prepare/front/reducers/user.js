@@ -13,6 +13,12 @@ export const initialState = {
     changeNicknameLoading: false, // 닉네임 변경 시도중
     changeNicknameComplete: false,
     changeNicknameError: null,
+    followLoading: false, // 팔로우 시도중
+    followError: false,
+    followDone: null,
+    unFollowLoading: false, // 언팔로우 시도중
+    unFollowError: false,
+    unFollowDone: null,
     me: null,
     signUpData: {},
     logInData: {},
@@ -73,6 +79,34 @@ export const logOutRequestAction = () => {
 const reducer = (state = initialState, action) => {
     return produce(state, (draft) => {
         switch (action.type) {
+            case FOLLOW_REQUEST:
+                draft.followLoading = true;
+                draft.followError = null;
+                draft.followDone = false;
+                break;
+            case FOLLOW_SUCCESS:
+                draft.followLoading = false;
+                draft.followComplete = true;
+                draft.me.Followings.push({ id: action.data });
+                break;
+            case FOLLOW_FAILURE:
+                draft.followLoading = false;
+                draft.followError = action.error;
+                break;
+            case UNFOLLOW_REQUEST:
+                draft.unFollowLoading = true;
+                draft.unFollowError = null;
+                draft.unFollowDone = false;
+                break;
+            case UNFOLLOW_SUCCESS:
+                draft.unFollowLoading = false;
+                draft.unFollowComplete = true;
+                draft.me.Followings = draft.me.Followings.filter((v, i) => v.id !== action.data);
+                break;
+            case UNFOLLOW_FAILURE:
+                draft.unFollowLoading = false;
+                draft.unFollowError = action.error;
+                break;
             case LOG_IN_REQUEST:
                 draft.logInLoading = true;
                 draft.logInError = null;

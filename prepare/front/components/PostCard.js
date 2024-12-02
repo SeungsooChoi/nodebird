@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import PostImages from "./PostImages";
 import CommentForm from "./CommentForm";
 import {removePostAction} from "../reducers/post";
+import FollowButton from "./FollowButton";
 
 const PostCard = ({ post }) => {
   const dispatch = useDispatch();
@@ -13,15 +14,19 @@ const PostCard = ({ post }) => {
   const { removePostLoading } = useSelector((state) => state.post);
   const [liked, setLiked] = useState(false);
   const [commentFormOpend, setCommentFormOpend] = useState(false);
+
   const onToggleLike = useCallback(()=> {
     setLiked((prev) => !prev);
   }, []);
+
   const onToggleComment = useCallback(()=> {
     setCommentFormOpend((prev) => !prev);
   }, []);
+
   const onRemovePost = useCallback(() => {
      dispatch(removePostAction(post.id));
   }, []);
+
   return (
     <div style={{ marginBottom: 20 }}>
       <Card
@@ -45,6 +50,7 @@ const PostCard = ({ post }) => {
             <EllipsisOutlined />
           </Popover>
         ]}
+        extra={id && <FollowButton post={post} />}
       >
         <Card.Meta
           avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
